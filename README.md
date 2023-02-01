@@ -1,2 +1,1 @@
-# 8BP_LevelCalc
-XP and level calculator for 8 Ball Pool by Miniclip
+# [8 Ball Pool Level Calculator](https://brokenphilip.github.io/8BP_LevelCalc/)
