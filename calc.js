@@ -92,6 +92,13 @@ function checkRange(element) {
 	}
 }
 
+// Format number (adds spaces)
+function fmtN(x) {
+	let parts = x.toString().split(".");
+	parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+	return parts.join(".");
+}
+
 // Toggle <div> display based on its respective checkbox
 function toggle(name) {
 	let checkBox = document.getElementById(name + "_cb");
@@ -112,7 +119,7 @@ function calculateTotalXP(startLevel, endLevel) {
 // Calculate XP based on table, VIP, and cues (if any)
 // If XP is -1, show info about the table itself, not the XP requirement
 function calculateXP(result, xp) {
-	let checkBox = document.getElementById(name.concat("matches_cb"));
+	let checkBox = document.getElementById("matches_cb");
 	if (!checkBox.checked) {
 		result.innerHTML += "<br>";
 		return;
@@ -148,7 +155,7 @@ function calculateXP(result, xp) {
 	let vipMultiplier = parseFloat(document.querySelector('input[name="vip"]:checked').value);
 	let cueMultiplier = 0;
 	
-	checkBox = document.getElementById(name.concat("cue_cb"));
+	checkBox = document.getElementById("cue_cb");
 	if (checkBox.checked) {
 		let numCues = parseInt(document.getElementById("cue_num").value) || 0;
 		cueMultiplier = parseFloat(document.querySelector('input[name="cue"]:checked').value) * numCues;
@@ -158,7 +165,7 @@ function calculateXP(result, xp) {
 	let xpPerWin = Math.floor(table[1] * vipMultiplier) + Math.round(table[1] * cueMultiplier);
 	let xpPerLoss = Math.floor(table[2] * vipMultiplier) + Math.round(table[2] * cueMultiplier);
 	
-	// Can't set innerHTML directly, otherwise it will close the <ul> for us
+	// Can't set innerHTML directly, otherwise it will prematurely close the <ul> for us
 	let content = "";
 	
 	// Display information for specified XP
@@ -167,15 +174,15 @@ function calculateXP(result, xp) {
 		let lossesNeeded = (xp / xpPerLoss).toFixed(2);
 		
 		content += "<ul>" +
-			"<li><strong>Wins in " + table[0] + " needed: </strong>" + winsNeeded + "</li>" +
-			"<li><strong>Losses in " + table[0] + " needed: </strong>" + lossesNeeded + "</li>";
+			"<li><strong>Number of " + table[0] + " wins: </strong>" + fmtN(winsNeeded) + "</li>" +
+			"<li><strong>Number of " + table[0] + " losses: </strong>" + fmtN(lossesNeeded) + "</li>";
 			
-		checkBox = document.getElementById(name.concat("winrate_cb"));
+		checkBox = document.getElementById("winrate_cb");
 		if (checkBox.checked) {
 			let winrate = parseFloat(document.getElementById("winrate").value) || 0.0;
 			let matchesNeeded = (xp / ((winrate / 100) * xpPerWin + (1 - (winrate / 100)) * xpPerLoss)).toFixed(2);
 			
-			content += "<li><strong>Matches in " + table[0] + " needed at " + winrate + "% winrate: </strong>" + matchesNeeded + "</li>";
+			content += "<li><strong>Number of " + table[0] + " matches at " + winrate + "% winrate: </strong>" + fmtN(matchesNeeded) + "</li>";
 		}
 			
 		content += "</ul>";
@@ -183,20 +190,18 @@ function calculateXP(result, xp) {
 	
 	// Display information about the table itself
 	else {
-		content += "<strong>Table: </strong>" + table[0] + 
-			"<ul>" +
-			"<li><strong>XP per win (incl. VIP/cue bonus): </strong>" + xpPerWin + "</li>" +
-			"<li><strong>XP per loss (incl. VIP/cue bonus): </strong>" + xpPerLoss + "</li>";
+		content += "<h2>" + table[0] + " table</h2>" +
+			"" +
+			"<strong>XP per win (incl. VIP/cue bonus): </strong>" + fmtN(xpPerWin) + "<br>" +
+			"<strong>XP per loss (incl. VIP/cue bonus): </strong>" + fmtN(xpPerLoss) + "<br>";
 			
-		checkBox = document.getElementById(name.concat("winrate_cb"));
+		checkBox = document.getElementById("winrate_cb");
 		if (checkBox.checked) {
 			let winrate = parseFloat(document.getElementById("winrate").value) || 0.0;
 			let matchesNeeded = ((winrate / 100) * xpPerWin + (1 - (winrate / 100)) * xpPerLoss).toFixed(2);
 			
-			content += "<li><strong>XP per match at " + winrate + "% winrate: </strong>" + matchesNeeded + "</li>";
+			content += "<strong>XP per match at " + winrate + "% winrate: </strong>" + fmtN(matchesNeeded) + "<br>";
 		}
-			
-		content += "</ul>";
 	}
 	
 	result.innerHTML += content;
@@ -210,7 +215,8 @@ function calculate() {
 	let xp = parseInt(document.getElementById("xp").value) || 0;
 	let nextXP = xpNeeded[level - 1] - xp;
 	if (nextXP < 1) {
-		result.innerHTML = "<strong>Error: </strong> You have more XP (" + xp + ") than the next level requirement (" + xpNeeded[level - 1] + ")";
+		result.innerHTML = "<strong>Error: </strong> You have more or equal XP (" + fmtN(xp) + ") than the next level requirement (" + fmtN(xpNeeded[level - 1]) + ")";
+		result.scrollIntoView();
 		return;
 	}
 	
@@ -221,35 +227,38 @@ function calculate() {
 	// Special case where we display information about the table to the user
 	calculateXP(result, -1);
 	
-	result.innerHTML += "<strong>Level: </strong>" + level + "<br>" +
-		"<strong>XP: </strong>" + xp + "/" + xpNeeded[level-1] + "<br>" +
-		"<strong>Total XP: </strong>" + totalXP + " (" + totalPercent + "%)";
+	result.innerHTML += "<h2>Your stats</h2>" + 
+		"<strong>Level and XP: </strong>" + level + " (" + fmtN(xp) + "/" + fmtN(xpNeeded[level-1]) + ")<br>" +
+		"<strong>Total XP (from level 1): </strong>" + fmtN(totalXP) + " (" + totalPercent + "% to 999)";
 		
 	calculateXP(result, totalXP);
 	
-	result.innerHTML += "<strong>XP to level " + nextLevel + ": </strong>" + nextXP;
+	result.innerHTML += "<strong>XP needed for next level " + nextLevel + ": </strong>" + fmtN(nextXP);
 		
 	calculateXP(result, nextXP);
 	
-	let checkBox = document.getElementById(name.concat("target_cb"));
+	let checkBox = document.getElementById("target_cb");
 	if (checkBox.checked) {
 		let targetLevel = parseInt(document.getElementById("target").value) || 1;
 		
 		if (targetLevel <= level) {
 			result.innerHTML = "<strong>Error: </strong> You have a higher level (" + level + ") than your target level (" + targetLevel + ")";
+			result.scrollIntoView();
 			return;
 		}
 		
 		let targetTotalXP = calculateTotalXP(1, targetLevel);
 		let targetTotalPercent = ((targetTotalXP / xpTo999) * 100).toFixed(2);
 		let targetXP = calculateTotalXP(level, targetLevel) - xp;
-		result.innerHTML += "<strong>Target Level: </strong>" + targetLevel + "<br>" +
-			"<strong>Target total XP: </strong>" + targetTotalXP + " (" + targetTotalPercent + "%)";
+		result.innerHTML += "<h2>Target level " + targetLevel + "</h2>" + 
+			"<strong>Target total XP (from level 1): </strong>" + fmtN(targetTotalXP) + " (" + targetTotalPercent + "% to 999)";
 		
 		calculateXP(result, targetTotalXP);
 		
-		result.innerHTML += "<strong>XP to target level " + targetLevel + ": </strong>" + targetXP;
+		result.innerHTML += "<strong>XP needed for target level " + targetLevel + ": </strong>" + fmtN(targetXP);
 		
 		calculateXP(result, targetXP);
 	}
+	
+	result.scrollIntoView();
 }
