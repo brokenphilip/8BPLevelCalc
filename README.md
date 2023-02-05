@@ -7,4 +7,4 @@
 - Biblically Accurate™ - XP values are taken from the game itself, no approximations and 100% precise
 
 # Issues/Suggestions
-Visit the [issue tracker.](https://github.com/brokenphilip/8BP_LevelCalc/issues?q=) Please describe in as much detail as possible as to what problems you are having and/or what you're suggesting.
+Visit the [issue tracker](https://github.com/brokenphilip/8BP_LevelCalc/issues?q=). If your issue/suggestion hasn't been mentioned, create a new issue. Please describe in as much detail as possible as to what problems you are having and/or what you're suggesting.
