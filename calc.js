@@ -19,7 +19,7 @@ const mainTables = [
 	["Toronto", 2210, 884],
 	["Cairo", 3127, 999],
 	["Dubai", 4044, 1114],
-	//["Cannes", 0, 0],
+	//["Cannes", 5622, 0],
 	["Shanghai", 5000, 1300],
 	["Paris", 6000, 1500],
 	["Rome", 6550, 1750],
