@@ -222,13 +222,15 @@ function calculate() {
 	
 	let totalXP = calculateTotalXP(1, level) + xp;
 	let totalPercent = ((totalXP / xpTo999) * 100).toFixed(2);
+	
+	let nextPercent = ((xp / xpNeeded[level-1]) * 100).toFixed(2);
 	let nextLevel = level + 1;
 	
 	// Special case where we display information about the table to the user
 	calculateXP(result, -1);
 	
 	result.innerHTML += "<h2>Your stats</h2>" + 
-		"<strong>Level and XP: </strong>" + level + " (" + fmtN(xp) + "/" + fmtN(xpNeeded[level-1]) + ")<br>" +
+		"<strong>Level and XP: </strong>" + level + " (" + fmtN(xp) + "/" + fmtN(xpNeeded[level-1]) + " - " + nextPercent + "% to " + nextLevel + ")<br>" +
 		"<strong>Total XP (from level 1): </strong>" + fmtN(totalXP) + " (" + totalPercent + "% to 999)";
 		
 	calculateXP(result, totalXP);
