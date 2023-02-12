@@ -15,7 +15,7 @@ const mainTables = [
 	//["Cancun", 1581, 0],
 	["Las Vegas", 1547, 309],
 	["Jakarta", 1768, 707],
-	//["Monte Carlo", 0, 0],
+	//["Monte Carlo", 1768, 707 ???],
 	["Toronto", 2210, 884],
 	["Cairo", 3127, 999],
 	["Dubai", 4044, 1114],
