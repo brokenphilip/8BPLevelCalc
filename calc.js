@@ -92,7 +92,7 @@ function checkRange(element) {
 	}
 }
 
-// Format number (adds spaces)
+// Format number (adds spaces after every 3 digits)
 function fmtN(x) {
 	let parts = x.toString().split(".");
 	parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
