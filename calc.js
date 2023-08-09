@@ -329,11 +329,14 @@ function calculate() {
 		
 		let targetTotalXP = calculateTotalXP(1, targetLevel);
 		let targetTotalPercent = ((targetTotalXP / xpTo999) * 100).toFixed(2);
+		let targetPercent = ((totalXP / targetTotalXP) * 100).toFixed(2);
 		let targetXP = calculateTotalXP(level, targetLevel) - xp;
 		
-		content += "<br><fieldset><legend>Target progress (" + targetTotalPercent + "%)</legend>";
+		content += "<br><fieldset><legend>Target progress (" + targetPercent + "%)</legend>";
 		
 		content += levelMeter(content, 1, targetLevel, totalXP, targetTotalXP);
+		
+		content += "<p>Target level <strong>" + targetLevel + "</strong> is <strong>" + targetTotalPercent + "%</strong> to level <strong>999</strong></p>"
 		
 		content += "<strong>XP needed: " + fmtN(targetXP) + "</strong>";
 		
