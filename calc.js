@@ -240,7 +240,7 @@ function calculateXP(result, xp) {
 				"<p style='color: var(--color-darkGrey); font-size: 30px;'>" + fmtN(matchesNeeded) + "</p></strong></div>";
 		}
 		
-		content += "</fieldset>";
+		content += "<strong>XP values include VIP/Cue bonuses.</strong></fieldset>";
 	}
 	
 	return content;
@@ -285,7 +285,7 @@ function calculate() {
 	// Special case where we display information about the table to the user
 	content += calculateXP(content, -1);
 	
-	content += "<fieldset><legend>Current progress (" + nextPercent + "%)</legend>";
+	content += "<br><fieldset><legend>Current progress (" + nextPercent + "%)</legend>";
 		
 	content += levelMeter(content, level, nextLevel, xp, xpNeeded[level-1]);
 	
@@ -299,7 +299,7 @@ function calculate() {
 		
 	content += calculateXP(content, nextXP);
 	
-	content += "</fieldset><fieldset><legend>Lifetime progress (" + totalPercent + "%)</legend>";
+	content += "</fieldset><br><fieldset><legend>Lifetime progress (" + totalPercent + "%)</legend>";
 	
 	content += levelMeter(content, 1, 999, totalXP, xpTo999);
 	
@@ -331,7 +331,7 @@ function calculate() {
 		let targetTotalPercent = ((targetTotalXP / xpTo999) * 100).toFixed(2);
 		let targetXP = calculateTotalXP(level, targetLevel) - xp;
 		
-		content += "<fieldset><legend>Target progress (" + targetTotalPercent + "%)</legend>";
+		content += "<br><fieldset><legend>Target progress (" + targetTotalPercent + "%)</legend>";
 		
 		content += levelMeter(content, 1, targetLevel, totalXP, targetTotalXP);
 		
