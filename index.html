@@ -15,115 +15,149 @@
 		<meta property="og:type" content="website">
 		<meta property="og:url" content="https://brokenphilip.github.io/8BPLevelCalc/">
 		
-		<link rel="stylesheet" href="style.css">
 		<script src="calc.js"></script>
+		
+		<link rel="stylesheet" href="https://unpkg.com/chota@latest">
+		<link rel="stylesheet" href="style.css">
 	</head>
-	<body>
-		<h1>8 Ball Pool Level Calculator v0.4</h1>
-		<h2>Give suggestions or report issues <a href="https://github.com/brokenphilip/8BP_LevelCalc" target="_blank">here.</a></h2>
-		<form>
-			<label for="level">Level:</label><br>
-			<input type="number" id="level" min="1" max="999" value="1" onkeyup="checkRange(this)"><br>
-			
-			<br>
-			
-			<label for="xp">XP:</label><br>
-			<input type="number" id="xp" min="0" value="0" max="30173333" onkeyup="checkRange(this)"><br>
-			
-			<br>
-			
-			<input type="checkbox" id="target_cb" onclick="toggle('target')">
-			<label for="target_cb"> XP needed for level</label><br>
-			
-			<br>
-			
-			<div id="target_div" style="display:none">
-			
-				<label for="target">Target level:</label><br>
-				<input type="number" id="target" min="1" max="999" value="1" onkeyup="checkRange(this)"><br>
+	<body class>
+		<div id="top" class="container" role="document">
+			<div id="c_prompts">
 				
-			</div>
-			
-			<br>
-			
-			<input type="checkbox" id="matches_cb" onclick="toggle('matches')">
-			<label for="matches_cb"> Matches needed for XP</label><br>
-			
-			<br>
-			
-			<div id="matches_div" style="display:none">
-			
-				<label for="table">Table:</label><br>
-				<select name="table" id="table">
-					<option value="-1">(choose)</option>
-					<optgroup id="main_tables" label="Main tables"></optgroup>
-					<optgroup id="2x_tables" label="2x bet tables"></optgroup>
-					<optgroup id="tournament_tables" label="Tournament tables (WIP)"></optgroup>
-				</select><br>
-				<label for="table">Monaco and tournaments are counted per round!</label><br>
-				
-				<br>
-				
-				<input type="checkbox" id="winrate_cb" onclick="toggle('winrate')">
-				<label for="winrate_cb"> Calculate based on winrate</label><br>
-			
-				<br>
-			
-				<div id="winrate_div" style="display:none">
-			
-					<label for="winrate">Win percentage:</label><br>
-					<input type="number" id="winrate" min="0" max="100" step="0.1" value="0" onkeyup="checkRange(this)"><br>
-				
-				</div>
-			
-				<br>
-			
-				<span>VIP:</span><br>
-				<input type="radio" id="bronze" name="vip" value="1.0" checked="checked">
-				<label for="bronze">Bronze (x1.0 XP)</label><br>
-				<input type="radio" id="silver" name="vip" value="1.1">
-				<label for="silver">Silver (x1.1 XP)</label><br>
-				<input type="radio" id="gold" name="vip" value="1.2">
-				<label for="gold">Gold (x1.2 XP)</label><br>
-				<input type="radio" id="emerald" name="vip" value="1.3">
-				<label for="emerald">Emerald (x1.3 XP)</label><br>
-				<input type="radio" id="diamond" name="vip" value="1.4">
-				<label for="diamond">Diamond (x1.4 XP)</label><br>
-				<input type="radio" id="black_diamond" name="vip" value="2.0">
-				<label for="black_diamond">Black Diamond (x2.0 XP)</label><br>
-				
-				<br>
-				
-				<input type="checkbox" id="cue_cb" onclick="toggle('cue')">
-				<label for="cue_cb"> Using Rare/Epic/Legendary cue</label><br>
-				
-				<br>
-				
-				<div id="cue_div" style="display:none">
-				
-					<span>Type:</span><br>
-					<input type="radio" id="rare" name="cue" value="0.05" checked="checked">
-					<label for="rare">Rare (5% XP/cue)</label><br>
-					<input type="radio" id="epic" name="cue" value="0.10">
-					<label for="epic">Epic (10% XP/cue)</label><br>
-					<input type="radio" id="legendary" name="cue" value="0.15">
-					<label for="legendary">Legendary (15% XP/cue)</label><br>
+				<header role="banner">
+					<h2 class="pull-right" style="margin: 0;">
+						<a href="javascript:void(0)" id="toggle_theme" onclick="switchMode(this)">☀️</a>
+					</h2>
 					
-					<br>
-			
-					<label for="cue_num">Number of cues owned:</label><br>
-					<input type="number" id="cue_num" min="0" max="22" value="0" onkeyup="checkRange(this)"><br>
+					<h2>8BP Level Calculator</h2>
+					<p>Give suggestions/report issues <a href="https://github.com/brokenphilip/8BPLevelCalc" target="_blank">here.</a></p>
+				</header>
 				
-				</div>
+				<fieldset>
+					<legend>Your stats</legend>
+					
+					<div class="row">
+						<div class="col-4">
+							<label for="level">Level:</label><br>
+							<input type="number" id="level" min="1" max="999" value="1" onkeyup="checkRange(this)">
+						</div>
+						<div class="col-8">
+							<label for="xp">XP:</label><br>
+							<input type="number" id="xp" min="0" value="0" max="30173333" onkeyup="checkRange(this)">
+						</div>
+					</div>
+				</fieldset>
+				
+				<br>
+				
+				<fieldset>
+					<legend>
+						<input type="checkbox" id="target_cb" onclick="toggle('target')">
+						<label for="target_cb">XP needed for level</label>
+					</legend>
+
+					<div id="target_div" style="display:none">
+						<label for="target">Target level:</label><br>
+						<input type="number" id="target" min="1" max="999" value="1" onkeyup="checkRange(this)"><br>
+					</div>
+				</fieldset>
+				
+				<br>
+				
+				<fieldset>
+					<legend>
+						<input type="checkbox" id="matches_cb" onclick="toggle('matches')">
+						<label for="matches_cb">Matches needed for XP</label>
+					</legend>
+				
+					<div id="matches_div" style="display:none">
+					
+						<label for="table">Table:</label><br>
+						<select name="table" id="table">
+							<option value="-1">(choose)</option>
+							<optgroup id="main_tables" label="Main tables"></optgroup>
+							<optgroup id="2x_tables" label="2x bet tables"></optgroup>
+							<optgroup id="tournament_tables" label="Tournament tables (WIP)"></optgroup>
+						</select>
+						<label for="table">Monaco and tournaments are counted per round!</label><br>
+						
+						<br>
+						
+						<fieldset>
+							<legend>
+								<input type="checkbox" id="winrate_cb" onclick="toggle('winrate')">
+								<label for="winrate_cb">Winrate</label>
+							</legend>
+					
+						<div id="winrate_div" style="display:none">
+							<label for="winrate">Win percentage:</label><br>
+							<input type="number" id="winrate" min="0" max="100" step="0.1" value="0" onkeyup="checkRange(this)"><br>
+						</div>
+						
+						</fieldset>
+					
+						<br>
+					
+						<fieldset>
+							<legend>VIP Level</legend>
+							<input type="radio" id="bronze" name="vip" value="1.0" checked="checked">
+							<label for="bronze">Bronze (x1.0 XP)</label><br>
+							<input type="radio" id="silver" name="vip" value="1.1">
+							<label for="silver">Silver (x1.1 XP)</label><br>
+							<input type="radio" id="gold" name="vip" value="1.2">
+							<label for="gold">Gold (x1.2 XP)</label><br>
+							<input type="radio" id="emerald" name="vip" value="1.3">
+							<label for="emerald">Emerald (x1.3 XP)</label><br>
+							<input type="radio" id="diamond" name="vip" value="1.4">
+							<label for="diamond">Diamond (x1.4 XP)</label><br>
+							<input type="radio" id="black_diamond" name="vip" value="2.0">
+							<label for="black_diamond">Black Diamond (x2.0 XP)</label>
+						</fieldset>
+						<br>
+						
+						<fieldset>
+							<legend>
+								<input type="checkbox" id="cue_cb" onclick="toggle('cue')">
+								<label for="cue_cb"> Using Special cue</label><br>
+							</legend>
+							
+							<div id="cue_div" style="display:none">
+							
+								<input type="radio" id="rare" name="cue" value="0.05" checked="checked">
+								<label for="rare">Rare (+5% XP/cue)</label><br>
+								<input type="radio" id="epic" name="cue" value="0.10">
+								<label for="epic">Epic (+10% XP/cue)</label><br>
+								<input type="radio" id="legendary" name="cue" value="0.15">
+								<label for="legendary">Legendary (+15% XP/cue)</label><br>
+								
+								<br>
+						
+								<label for="cue_num">Number of cues owned:</label><br>
+								<input type="number" id="cue_num" min="0" max="22" value="0" onkeyup="checkRange(this)"><br>
+							
+							</div>
+						</fieldset>
+						
+					<br>
+						
+					</div>
+					
+				</fieldset>
+				
+				<br>
+				
+				<input type="button" value="Calculate!" onclick="calculate()">
 				
 			</div>
 			
-			<br>
+			<hr>
 			
-			<input type="button" value="Calculate!" onclick="calculate()">
-		</form>
-		<hr>
-		<h2>Result</h2>
-		<p id="result"></p>
+			<div id="c_results">
+			
+				<h2>Result</h2>
+				<p id="result"></p>
+				
+			</div>
+		</div>
 	</body>
 </html>

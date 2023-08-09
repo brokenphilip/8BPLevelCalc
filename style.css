@@ -1,3 +1,68 @@
+body {
+	--color-primary: #0075ff;
+}
+
 ul {
 	margin: 0;
+}
+
+body.dark {
+	--bg-color: #000;
+	--bg-secondary-color: #131316;
+	--font-color: #ddd;
+	--color-grey: #ccc;
+	--color-darkGrey: #777;
+	--color-lightGrey: #222;
+}
+
+body.dark input {
+	background: #222222 no-repeat 100%;
+	color: #ddd;
+}
+
+body.dark select {
+	background: #222222 no-repeat 100%;
+	color: #ddd;
+}
+
+@media (min-width: 1000px) {
+	#c_prompts {
+		float: left;
+		width: 49%;
+	}
+	
+	#c_results {
+		float: right;
+		width: 49%;
+	}
+	
+	hr {
+		display: none;
+	}
+}
+
+.lvl {
+	width: 60px;
+}
+
+.prog {
+	width: calc(100% - 120px);
+}
+
+.xp {
+	width: 49%;
+	text-align: center;
+}
+
+.xp2 {
+	width: 100%;
+	text-align: center;
+}
+
+meter::-webkit-meter-optimum-value {
+	background: var(--color-success);
+}
+
+meter::-webkit-meter-bar {
+	background: var(--color-lightGrey);
 }

@@ -51,8 +51,47 @@ const doubleBetTables = [
 	["Singapore", 0, 0]
 ];*/
 
-// Populate table selection when the webpage loads
+function setCookie(cname, cvalue, exdays) {
+	const d = new Date();
+	d.setTime(d.getTime() + (exdays*24*60*60*1000));
+	
+	let expires = "expires="+ d.toUTCString();
+	document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+	let name = cname + "=";
+	let decodedCookie = decodeURIComponent(document.cookie);
+	let ca = decodedCookie.split(';');
+	
+	for (let i = 0; i <ca.length; i++) {
+		let c = ca[i];
+		while (c.charAt(0) == ' ') {
+			c = c.substring(1);
+		}
+		if (c.indexOf(name) == 0) {
+			return c.substring(name.length, c.length);
+		}
+	}
+	
+	return "";
+}
+
+// First check for dark/light mode cookie, then populate table selection when the webpage loads
 window.onload = function() {
+	let cookie = getCookie("dark");
+	if (cookie == "true") {
+		switchMode(document.getElementById("toggle_theme"));
+	}
+	else if (cookie == "") {
+		if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+			setCookie("dark", "true", 365);
+		}
+		else {
+			setCookie("dark", "false", 365);
+		}
+	}
+	
 	let select = document.getElementById("main_tables");
 
 	for (let i = 0; i < mainTables.length; i++) {
@@ -121,8 +160,7 @@ function calculateTotalXP(startLevel, endLevel) {
 function calculateXP(result, xp) {
 	let checkBox = document.getElementById("matches_cb");
 	if (!checkBox.checked) {
-		result.innerHTML += "<br>";
-		return;
+		return"<br>";
 	}
 	
 	let select = document.getElementById("table");
@@ -130,8 +168,7 @@ function calculateXP(result, xp) {
 	
 	// Didn't select a table, bail
 	if (selectedValue == -1) {
-		result.innerHTML += "<br>";
-		return;
+		return "<br>";
 	}
 	
 	let table;
@@ -165,7 +202,7 @@ function calculateXP(result, xp) {
 	let xpPerWin = Math.floor(table[1] * vipMultiplier) + Math.round(table[1] * cueMultiplier);
 	let xpPerLoss = Math.floor(table[2] * vipMultiplier) + Math.round(table[2] * cueMultiplier);
 	
-	// Can't set innerHTML directly, otherwise it will prematurely close the <ul> for us
+	// Can't set innerHTML directly, otherwise it will prematurely close tags for us
 	let content = "";
 	
 	// Display information for specified XP
@@ -174,15 +211,15 @@ function calculateXP(result, xp) {
 		let lossesNeeded = (xp / xpPerLoss).toFixed(2);
 		
 		content += "<ul>" +
-			"<li><strong>Number of " + table[0] + " wins: </strong>" + fmtN(winsNeeded) + "</li>" +
-			"<li><strong>Number of " + table[0] + " losses: </strong>" + fmtN(lossesNeeded) + "</li>";
+			"<li><strong>" + fmtN(winsNeeded) + "</strong> wins in " + table[0] + "</li>" +
+			"<li><strong>" + fmtN(lossesNeeded) + "</strong> losses in " + table[0] + "</li>";
 			
 		checkBox = document.getElementById("winrate_cb");
 		if (checkBox.checked) {
 			let winrate = parseFloat(document.getElementById("winrate").value) || 0.0;
 			let matchesNeeded = (xp / ((winrate / 100) * xpPerWin + (1 - (winrate / 100)) * xpPerLoss)).toFixed(2);
 			
-			content += "<li><strong>Number of " + table[0] + " matches at " + winrate + "% winrate: </strong>" + fmtN(matchesNeeded) + "</li>";
+			content += "<li><strong>" + fmtN(matchesNeeded) + "</strong> matches in " + table[0] + " at " + winrate + "% winrate</li>";
 		}
 			
 		content += "</ul>";
@@ -190,21 +227,37 @@ function calculateXP(result, xp) {
 	
 	// Display information about the table itself
 	else {
-		content += "<h2>" + table[0] + " table</h2>" +
-			"" +
-			"<strong>XP per win (incl. VIP/cue bonus): </strong>" + fmtN(xpPerWin) + "<br>" +
-			"<strong>XP per loss (incl. VIP/cue bonus): </strong>" + fmtN(xpPerLoss) + "<br>";
+		content += "<fieldset><legend>" + table[0] + " table</legend><div class='row'>" +
+			"<div class='xp'><strong>XP per win<br><p style='color: var(--color-success); font-size: 30px;'>" + fmtN(xpPerWin) + "</p></strong></div>" +
+			"<div class='xp'><strong>XP per loss<br><p style='color: var(--color-error); font-size: 30px;'>" + fmtN(xpPerLoss) + "</p></strong></div><br>";
 			
 		checkBox = document.getElementById("winrate_cb");
 		if (checkBox.checked) {
 			let winrate = parseFloat(document.getElementById("winrate").value) || 0.0;
 			let matchesNeeded = ((winrate / 100) * xpPerWin + (1 - (winrate / 100)) * xpPerLoss).toFixed(2);
 			
-			content += "<strong>XP per match at " + winrate + "% winrate: </strong>" + fmtN(matchesNeeded) + "<br>";
+			content += "<div class='xp2'><strong>XP per match at " + winrate + "% winrate<br>" +
+				"<p style='color: var(--color-darkGrey); font-size: 30px;'>" + fmtN(matchesNeeded) + "</p></strong></div>";
 		}
+		
+		content += "</fieldset>";
 	}
 	
-	result.innerHTML += content;
+	return content;
+}
+
+function levelMeter(result, current_lvl, target_lvl, current_xp, target_xp) {
+	let content = "";
+	
+	content += "<div class='row'>" +
+		"<div class='lvl' style='text-align: center; font-size: 30px;'><strong>" + current_lvl + "</strong></div>" +
+		"<div class='prog' style='text-align: center; font-size: 12px;'>" +
+		"<strong style='width: 100%;'>" + fmtN(current_xp) + "/" + fmtN(target_xp) + "</strong>" +
+		"<meter style='width: 100%;' value='" + current_xp + "' min='0' max='" + target_xp + "'>" +
+		"</div>" +
+		"<div class='lvl' style='text-align: center; font-size: 30px;'><strong>" + target_lvl + "</strong></div></div>";
+		
+	return content;
 }
 
 function calculate() {
@@ -226,25 +279,50 @@ function calculate() {
 	let nextPercent = ((xp / xpNeeded[level-1]) * 100).toFixed(2);
 	let nextLevel = level + 1;
 	
+	// Can't set innerHTML directly, otherwise it will prematurely close tags for us
+	let content = "";
+	
 	// Special case where we display information about the table to the user
-	calculateXP(result, -1);
+	content += calculateXP(content, -1);
 	
-	result.innerHTML += "<h2>Your stats</h2>" + 
-		"<strong>Level and XP: </strong>" + level + " (" + fmtN(xp) + "/" + fmtN(xpNeeded[level-1]) + " - " + nextPercent + "% to " + nextLevel + ")<br>" +
-		"<strong>Total XP (from level 1): </strong>" + fmtN(totalXP) + " (" + totalPercent + "% to 999)";
+	content += "<fieldset><legend>Current progress (" + nextPercent + "%)</legend>";
 		
-	calculateXP(result, totalXP);
+	content += levelMeter(content, level, nextLevel, xp, xpNeeded[level-1]);
 	
-	result.innerHTML += "<strong>XP needed for next level " + nextLevel + ": </strong>" + fmtN(nextXP);
+	content += "<strong>Current XP: " + fmtN(xp) + "</strong>";
+	
+	content += calculateXP(content, xp);
+	
+	content += "<br>";
+	
+	content += "<strong>XP needed: " + fmtN(nextXP) + "</strong>";
 		
-	calculateXP(result, nextXP);
+	content += calculateXP(content, nextXP);
+	
+	content += "</fieldset><fieldset><legend>Lifetime progress (" + totalPercent + "%)</legend>";
+	
+	content += levelMeter(content, 1, 999, totalXP, xpTo999);
+	
+	content += "<strong>Current XP: " + fmtN(totalXP) + "</strong>";
+	
+	content += calculateXP(content, totalXP);
+	
+	content += "<br>";
+	
+	let xpFromNowTo999 = xpTo999 - xp;
+	
+	content += "<strong>XP needed: " + fmtN(xpFromNowTo999) + "</strong>";
+		
+	content += calculateXP(content, xpFromNowTo999);
+	
+	content += "</fieldset>";
 	
 	let checkBox = document.getElementById("target_cb");
 	if (checkBox.checked) {
 		let targetLevel = parseInt(document.getElementById("target").value) || 1;
 		
 		if (targetLevel <= level) {
-			result.innerHTML = "<strong>Error: </strong> You have a higher level (" + level + ") than your target level (" + targetLevel + ")";
+			result.innerHTML = "<strong style='color: var(--color-error);'>Error: </strong> You have a higher level (" + level + ") than your target level (" + targetLevel + ")";
 			result.scrollIntoView();
 			return;
 		}
@@ -252,15 +330,32 @@ function calculate() {
 		let targetTotalXP = calculateTotalXP(1, targetLevel);
 		let targetTotalPercent = ((targetTotalXP / xpTo999) * 100).toFixed(2);
 		let targetXP = calculateTotalXP(level, targetLevel) - xp;
-		result.innerHTML += "<h2>Target level " + targetLevel + "</h2>" + 
-			"<strong>Target total XP (from level 1): </strong>" + fmtN(targetTotalXP) + " (" + targetTotalPercent + "% to 999)";
 		
-		calculateXP(result, targetTotalXP);
+		content += "<fieldset><legend>Target progress (" + targetTotalPercent + "%)</legend>";
 		
-		result.innerHTML += "<strong>XP needed for target level " + targetLevel + ": </strong>" + fmtN(targetXP);
+		content += levelMeter(content, 1, targetLevel, totalXP, targetTotalXP);
 		
-		calculateXP(result, targetXP);
+		content += "<strong>XP needed: " + fmtN(targetXP) + "</strong>";
+		
+		content += calculateXP(content, targetXP);
+		
+		content += "</fieldset>";
 	}
 	
+	result.innerHTML = content;
 	result.scrollIntoView();
+}
+
+function switchMode(el) {
+	const bodyClass = document.body.classList;
+	if (bodyClass.contains('dark')) {
+		el.innerHTML = '☀️';
+		bodyClass.remove('dark');
+		setCookie("dark", "false", 365);
+	}
+	else {
+		el.innerHTML = '🌙';
+		bodyClass.add('dark');
+		setCookie("dark", "true", 365);
+	}
 }

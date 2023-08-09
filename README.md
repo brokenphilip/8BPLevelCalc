@@ -1,4 +1,5 @@
-# [8 Ball Pool Level Calculator v0.4](https://brokenphilip.github.io/8BPLevelCalc/)
+# [8 Ball Pool Level Calculator v1.0](https://brokenphilip.github.io/8BPLevelCalc/)
+- Made with ❤ using [Chota](https://github.com/jenil/chota)
 - Calculate total XP (from level 1) for a certain level
 - Calculate how much XP is necessary to reach a certain level (from your current level)
 - Calculate how many wins/losses on a specific table are necessary in order to earn a certain amount of XP
