@@ -160,7 +160,7 @@ function calculateTotalXP(startLevel, endLevel) {
 function calculateXP(result, xp) {
 	let checkBox = document.getElementById("matches_cb");
 	if (!checkBox.checked) {
-		return"<br>";
+		return "<br>";
 	}
 	
 	let select = document.getElementById("table");
