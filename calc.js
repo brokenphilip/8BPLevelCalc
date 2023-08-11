@@ -77,21 +77,28 @@ function getCookie(cname) {
 	return "";
 }
 
-// First check for dark/light mode cookie, then populate table selection when the webpage loads
 window.onload = function() {
 	let cookie = getCookie("dark");
+	
+	// Check our dark mode cookie and refresh it (changing the theme if true)
 	if (cookie == "true") {
 		switchMode(document.getElementById("toggle_theme"));
 	}
-	else if (cookie == "") {
+	else if (cookie == "false") {
+		setCookie("dark", "false", 365);
+	}
+	
+	// If not yet set, match the cookie to our system theme
+	else {
 		if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-			setCookie("dark", "true", 365);
+			switchMode(document.getElementById("toggle_theme"));
 		}
 		else {
 			setCookie("dark", "false", 365);
 		}
 	}
 	
+	// Populate table selection
 	let select = document.getElementById("main_tables");
 
 	for (let i = 0; i < mainTables.length; i++) {
@@ -155,9 +162,9 @@ function calculateTotalXP(startLevel, endLevel) {
 	return xp;
 }
 
-// Calculate XP based on table, VIP, and cues (if any)
-// If XP is -1, show info about the table itself, not the XP requirement
-function calculateXP(xp) {
+// Add table info for specified XP (required wins/losses/matches at winrate)
+// For (XP = -1), show just the amount of XP gained per win/loss/match at winrate
+function addTableInfo(xp) {
 	let checkBox = document.getElementById("matches_cb");
 	if (!checkBox.checked) {
 		return "<br>";
@@ -245,7 +252,8 @@ function calculateXP(xp) {
 	return content;
 }
 
-function levelMeter(current_lvl, target_lvl, current_xp, target_xp) {
+// Add a level progress bar/meter
+function addLevelMeter(current_lvl, target_lvl, current_xp, target_xp) {
 	let content = "";
 	
 	content += "<div class='row'>";
@@ -259,12 +267,15 @@ function levelMeter(current_lvl, target_lvl, current_xp, target_xp) {
 	return content;
 }
 
+// Main button onclick
 function calculate() {
 	let result = document.getElementById("result");
 	result.innerHTML = "";
 	
+	// If level/xp are unset, use 1 and 0 respectively
 	let level = parseInt(document.getElementById("level").value) || 1;
 	let xp = parseInt(document.getElementById("xp").value) || 0;
+	
 	let nextXP = xpNeeded[level - 1] - xp;
 	if (nextXP < 1) {
 		result.innerHTML = "<strong>Error: </strong> You have more or equal XP (" + fmtN(xp) + ") than the next level requirement (" + fmtN(xpNeeded[level - 1]) + ")";
@@ -284,28 +295,29 @@ function calculate() {
 	let content = "";
 	
 	// Special case where we display information about the table to the user
-	content += calculateXP(-1);
+	content += addTableInfo(-1);
 	
 	content += "<br><fieldset><legend>Current progress (" + nextPercent + "%)</legend>";
-	content += levelMeter(level, nextLevel, xp, xpNeeded[level-1]);
+	content += addLevelMeter(level, nextLevel, xp, xpNeeded[level-1]);
 	content += "<strong>Current XP: " + fmtN(xp) + "</strong>";
-	content += calculateXP(xp);
+	content += addTableInfo(xp);
 	content += "<br>";
 	content += "<strong>XP needed: " + fmtN(nextXP) + "</strong>";
-	content += calculateXP(nextXP);
+	content += addTableInfo(nextXP);
 	content += "</fieldset>"
 	
 	content += "<br><fieldset><legend>Lifetime progress (" + totalPercent + "%)</legend>";
-	content += levelMeter(1, 999, totalXP, xpTo999);
+	content += addLevelMeter(1, 999, totalXP, xpTo999);
 	content += "<strong>Current XP: " + fmtN(totalXP) + "</strong>";
-	content += calculateXP(totalXP);
+	content += addTableInfo(totalXP);
 	content += "<br>";
 	content += "<strong>XP needed: " + fmtN(xpFromNowTo999) + "</strong>";
-	content += calculateXP(xpFromNowTo999);
+	content += addTableInfo(xpFromNowTo999);
 	content += "</fieldset>";
 	
 	let checkBox = document.getElementById("target_cb");
 	if (checkBox.checked) {
+		// If target level is unset, use 1
 		let targetLevel = parseInt(document.getElementById("target").value) || 1;
 		
 		if (targetLevel <= level) {
@@ -320,10 +332,10 @@ function calculate() {
 		let targetXP = calculateTotalXP(level, targetLevel) - xp;
 		
 		content += "<br><fieldset><legend>Target progress (" + targetPercent + "%)</legend>";
-		content += levelMeter(1, targetLevel, totalXP, targetTotalXP);
+		content += addLevelMeter(1, targetLevel, totalXP, targetTotalXP);
 		content += "<p>Target level <strong>" + targetLevel + "</strong> is <strong>" + targetTotalPercent + "%</strong> to level <strong>999</strong></p>"
 		content += "<strong>XP needed: " + fmtN(targetXP) + "</strong>";
-		content += calculateXP(targetXP);
+		content += addTableInfo(targetXP);
 		content += "</fieldset>";
 	}
 	
