@@ -28,6 +28,7 @@ const mainTables = [
 	["Seoul", 9400, 2820],
 	["Mumbai", 10500, 3150],
 	["Berlin", 13000, 3900],
+	["Bet 30m (Epic)", 15600, 4680],
 	["Venice", 26000, 7800]
 ];
 
