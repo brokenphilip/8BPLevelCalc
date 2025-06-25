@@ -6,53 +6,65 @@ const xpNeeded = [14,127,231,472,720,976,1239,1772,2322,2887,3470,4070,5362,6693
 const xpTo999 = 8810514596;
 
 // ["Name", XP/win, XP/loss]
-const mainTables = [
-	["Monaco", 360, 72],
-	["London", 68, 14],
-	["Sydney", 177, 35],
-	["Moscow/Lisbon", 360, 72],
-	["Tokyo", 884, 177],
-	["Cancun", 1581, 316],
-	["Las Vegas", 1547, 309],
-	["Jakarta", 1768, 707],
-	["Monte Carlo", 1768, 707],
-	["Toronto", 2210, 884],
-	["Cairo", 3127, 999],
-	["Dubai", 4044, 1114],
-	["Cannes", 5622, 1519],
-	["Shanghai", 5000, 1300],
-	["Paris", 6000, 1500],
-	["Rome", 6550, 1750],
-	["Bangkok", 7500, 2500],
-	["Doha", 10100, 3000],
-	["Seoul", 9400, 2820],
-	["Mumbai", 10500, 3150],
-	["Berlin", 13000, 3900],
-	["Bet 30m (Epic)", 15600, 4680],
-	["Venice", 26000, 7800]
+const mainTables =
+[
+	["Monaco* (All-in)", 360, 72],
+	["London (50/100)", 68, 14],
+	["Sydney (100/200)", 177, 35],
+	["Moscow/Lisbon (500/1K)", 360, 72],
+	["Tokyo (2.5K/5K)", 884, 177],
+	["Cancun (7.5K/15K)", 1581, 316],
+	["Las Vegas (10K/20K)", 1547, 309],
+	["Jakarta (50K/100K)", 1768, 707],
+	["Monte Carlo (75K/150K)", 1768, 707],
+	["Toronto (100K/200K)", 2210, 884],
+	["Cairo (250K/500K)", 3127, 999],
+	["Dubai (500K/1M)", 4044, 1114],
+	["Cannes (750K/1.5M)", 5622, 1519],
+	["Shanghai (1M/2M)", 5000, 1300],
+	["Paris (2.5M/5M)", 6000, 1500],
+	["Rome (4M/8M)", 6550, 1750],
+	["Bangkok (5M/10M)", 7500, 2500],
+	["Doha (7.5M/15M)", 10100, 3000],
+	["Seoul (10M/20M)", 9400, 2820],
+	["Mumbai (15M/30M)", 10500, 3150],
+	["Berlin (25M/50M)", 13000, 3900],
+	["Venice (75M/150M)", 26000, 7800],
+	["Osaka (100M/200M)", 17000, 5200],
+	["Maui* (1B/2B)", 78000, 23400],
 ];
 
-const doubleBetTables = [
-	["Bet 100", 177, 35],
-	["Bet 500", 360, 72],
-	["Bet 2.5k", 884, 177],
-	["Bet 10k", 1547, 309],
-	["Bet 50k", 1768, 707],
-	["Bet 100k", 2210, 884],
-	["Bet 500k", 4044, 1114],
-	["Bet 2.5m", 6000, 1500],
-	["Bet 10m", 9400, 2820]
+const doubleBetTables =
+[
+	["2x Bet (100/200)", 177, 35],
+	["2x Bet (500/1K)", 360, 72],
+	["2x Bet (2.5K/5K)", 884, 177],
+	["2x Bet (10K/20K)", 1547, 309],
+	["2x Bet (50K/100K)", 1768, 707],
+	["2x Bet (100K/200K)", 2210, 884],
+	["2x Bet (500K/1M)", 4044, 1114],
+	["2x Bet (2.5M/5M)", 6000, 1500],
+	["2x Bet (10M/20M)", 9400, 2820]
 ];
 
-/*const tournamentTables = [
-	["Barcelona", 0, 0],
-	["Buenos Aires", 0, 0],
-	["Rio", 0, 0],
-	["Amsterdam", 0, 0],
-	["Singapore", 0, 0]
-];*/
+const specialTables =
+[
+	["Epic Event (30M/60M)", 15600, 4680],
+	["9-Ball Event (40M/80M)", 6000, 1500],
+	["8-Ball Event (50M/100M)", 13000, 3900]
+];
 
-function setCookie(cname, cvalue, exdays) {
+const tournamentTables =
+[
+	["Barcelona* (200/1K)", 82, 17],
+	["Buenos Aires* (500/2.5K)", 88, 20],
+	["Rio* (3K/18K)", 212, 44],
+	["Amsterdam* (5K/30K)", 432, 90],
+	["Singapore* (10K/60K)", 1061, 221]
+];
+
+function setCookie(cname, cvalue, exdays)
+{
 	const d = new Date();
 	d.setTime(d.getTime() + (exdays*24*60*60*1000));
 	
@@ -60,17 +72,21 @@ function setCookie(cname, cvalue, exdays) {
 	document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
-function getCookie(cname) {
+function getCookie(cname)
+{
 	let name = cname + "=";
 	let decodedCookie = decodeURIComponent(document.cookie);
 	let ca = decodedCookie.split(';');
 	
-	for (let i = 0; i <ca.length; i++) {
+	for (let i = 0; i <ca.length; i++)
+	{
 		let c = ca[i];
-		while (c.charAt(0) == ' ') {
+		while (c.charAt(0) == ' ')
+		{
 			c = c.substring(1);
 		}
-		if (c.indexOf(name) == 0) {
+		if (c.indexOf(name) == 0)
+		{
 			return c.substring(name.length, c.length);
 		}
 	}
@@ -78,23 +94,29 @@ function getCookie(cname) {
 	return "";
 }
 
-window.onload = function() {
+window.onload = function()
+{
 	let cookie = getCookie("dark");
 	
 	// Check our dark mode cookie and refresh it (changing the theme if true)
-	if (cookie == "true") {
+	if (cookie == "true")
+	{
 		switchMode(document.getElementById("toggle_theme"));
 	}
-	else if (cookie == "false") {
+	else if (cookie == "false")
+	{
 		setCookie("dark", "false", 365);
 	}
 	
 	// If not yet set, match the cookie to our system theme
-	else {
-		if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+	else
+	{
+		if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
+		{
 			switchMode(document.getElementById("toggle_theme"));
 		}
-		else {
+		else
+		{
 			setCookie("dark", "false", 365);
 		}
 	}
@@ -102,7 +124,8 @@ window.onload = function() {
 	// Populate table selection
 	let select = document.getElementById("main_tables");
 
-	for (let i = 0; i < mainTables.length; i++) {
+	for (let i = 0; i < mainTables.length; i++)
+	{
 		let name = mainTables[i][0];
 		let element = document.createElement("option");
 		element.textContent = name;
@@ -111,26 +134,40 @@ window.onload = function() {
 	
 	select = document.getElementById("2x_tables");
 	
-	for (let i = 0; i < doubleBetTables.length; i++) {
+	for (let i = 0; i < doubleBetTables.length; i++)
+	{
 		let name = doubleBetTables[i][0];
 		let element = document.createElement("option");
 		element.textContent = name;
 		select.appendChild(element);
 	}
 	
-	/*select = document.getElementById("tournament_tables");
+	select = document.getElementById("special_tables");
 	
-	for (let i = 0; i < tournamentTables.length; i++) {
+	for (let i = 0; i < specialTables.length; i++)
+	{
+		let name = specialTables[i][0];
+		let element = document.createElement("option");
+		element.textContent = name;
+		select.appendChild(element);
+	}
+	
+	select = document.getElementById("tournament_tables");
+	
+	for (let i = 0; i < tournamentTables.length; i++)
+	{
 		let name = tournamentTables[i][0];
 		let element = document.createElement("option");
 		element.textContent = name;
 		select.appendChild(element);
-	}*/
+	}
 };
 
 // Prevent users from inputting out of range values in number inputs
-function checkRange(element) {
-	if (element.value != "") {
+function checkRange(element)
+{
+	if (element.value != "")
+	{
 		if (parseInt(element.value) < parseInt(element.min))
 			element.value = element.min;
 
@@ -140,14 +177,16 @@ function checkRange(element) {
 }
 
 // Format number (adds spaces after every 3 digits)
-function fmtN(x) {
+function fmtN(x)
+{
 	let parts = x.toString().split(".");
 	parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 	return parts.join(".");
 }
 
 // Toggle <div> display based on its respective checkbox
-function toggle(name) {
+function toggle(name)
+{
 	let checkBox = document.getElementById(name + "_cb");
 	let div = document.getElementById(name + "_div");
 	
@@ -155,19 +194,48 @@ function toggle(name) {
 }
 
 // How much XP is needed to go from startLevel to endLevel
-function calculateTotalXP(startLevel, endLevel) {
+function calculateTotalXP(startLevel, endLevel)
+{
 	let xp = 0;
 	for (let i = startLevel - 1; i < endLevel - 1; i++)
+	{
 		xp += xpNeeded[i];
+	}
 	
 	return xp;
 }
 
+function getTable(i)
+{
+	if (i < mainTables.length)
+	{
+		return mainTables[i];
+	}
+	
+	i -= mainTables.length;
+
+	if (i < doubleBetTables.length)
+	{
+		return doubleBetTables[i];
+	}
+	
+	i -= doubleBetTables.length;
+
+	if (i < specialTables.length)
+	{
+		return specialTables[i];
+	}
+	
+	return tournamentTables[i - specialTables.length];
+}
+
 // Add table info for specified XP (required wins/losses/matches at winrate)
 // For (XP = -1), show just the amount of XP gained per win/loss/match at winrate
-function addTableInfo(xp) {
+function addTableInfo(xp)
+{
 	let checkBox = document.getElementById("matches_cb");
-	if (!checkBox.checked) {
+	if (!checkBox.checked)
+	{
 		return "<br>";
 	}
 	
@@ -175,33 +243,19 @@ function addTableInfo(xp) {
 	let selectedValue = select.selectedIndex - 1;
 	
 	// Didn't select a table, bail
-	if (selectedValue == -1) {
+	if (selectedValue == -1)
+	{
 		return "<br>";
 	}
 	
-	let table;
-	
-	// Selected a main table
-	if (selectedValue < mainTables.length)
-		table = mainTables[selectedValue];
-	
-	// Selected a double bet table
-	else /*if (selectedValue < tournamentTables.length)*/ {
-		selectedValue -= mainTables.length;
-		table = doubleBetTables[selectedValue];
-	}
-	
-	// Selected a tournament table
-	/*else {
-		selectedValue -= doubleBetTables.length;
-		table = tournamentTables[selectedValue];
-	}*/
+	let table = getTable(selectedValue);
 	
 	let vipMultiplier = parseFloat(document.querySelector('input[name="vip"]:checked').value);
 	let cueMultiplier = 0;
 	
 	checkBox = document.getElementById("cue_cb");
-	if (checkBox.checked) {
+	if (checkBox.checked)
+	{
 		let numCues = parseInt(document.getElementById("cue_num").value) || 0;
 		cueMultiplier = parseFloat(document.querySelector('input[name="cue"]:checked').value) * numCues;
 	}
@@ -213,7 +267,8 @@ function addTableInfo(xp) {
 	let content = "";
 	
 	// Display information for specified XP
-	if (xp != -1) {
+	if (xp != -1)
+	{
 		let winsNeeded = (xp / xpPerWin).toFixed(2);
 		let lossesNeeded = (xp / xpPerLoss).toFixed(2);
 		
@@ -222,7 +277,8 @@ function addTableInfo(xp) {
 		content += "<li><strong>" + fmtN(lossesNeeded) + "</strong> losses in " + table[0] + "</li>";
 			
 		checkBox = document.getElementById("winrate_cb");
-		if (checkBox.checked) {
+		if (checkBox.checked)
+		{
 			let winrate = parseFloat(document.getElementById("winrate").value) || 0.0;
 			let matchesNeeded = (xp / ((winrate / 100) * xpPerWin + (1 - (winrate / 100)) * xpPerLoss)).toFixed(2);
 			
@@ -233,13 +289,15 @@ function addTableInfo(xp) {
 	}
 	
 	// Display information about the table itself
-	else {
+	else
+	{
 		content += "<fieldset><legend>" + table[0] + " table</legend><div class='row'>";
 		content += "<div class='xp'><strong>XP per win<br><p style='color: var(--color-success); font-size: 30px;'>" + fmtN(xpPerWin) + "</p></strong></div>";
 		content += "<div class='xp'><strong>XP per loss<br><p style='color: var(--color-error); font-size: 30px;'>" + fmtN(xpPerLoss) + "</p></strong></div><br>";
 			
 		checkBox = document.getElementById("winrate_cb");
-		if (checkBox.checked) {
+		if (checkBox.checked)
+		{
 			let winrate = parseFloat(document.getElementById("winrate").value) || 0.0;
 			let matchesNeeded = ((winrate / 100) * xpPerWin + (1 - (winrate / 100)) * xpPerLoss).toFixed(2);
 			
@@ -254,7 +312,8 @@ function addTableInfo(xp) {
 }
 
 // Add a level progress bar/meter
-function addLevelMeter(current_lvl, target_lvl, current_xp, target_xp) {
+function addLevelMeter(current_lvl, target_lvl, current_xp, target_xp)
+{
 	let content = "";
 	
 	content += "<div class='row'>";
@@ -269,7 +328,8 @@ function addLevelMeter(current_lvl, target_lvl, current_xp, target_xp) {
 }
 
 // Main button onclick
-function calculate() {
+function calculate()
+{
 	let result = document.getElementById("result");
 	result.innerHTML = "";
 	
@@ -278,7 +338,8 @@ function calculate() {
 	let xp = parseInt(document.getElementById("xp").value) || 0;
 	
 	let nextXP = xpNeeded[level - 1] - xp;
-	if (nextXP < 1) {
+	if (nextXP < 1)
+	{
 		result.innerHTML = "<strong>Error: </strong> You have more or equal XP (" + fmtN(xp) + ") than the next level requirement (" + fmtN(xpNeeded[level - 1]) + ")";
 		result.scrollIntoView();
 		return;
@@ -317,11 +378,13 @@ function calculate() {
 	content += "</fieldset>";
 	
 	let checkBox = document.getElementById("target_cb");
-	if (checkBox.checked) {
+	if (checkBox.checked)
+	{
 		// If target level is unset, use 1
 		let targetLevel = parseInt(document.getElementById("target").value) || 1;
 		
-		if (targetLevel <= level) {
+		if (targetLevel <= level)
+		{
 			result.innerHTML = "<strong style='color: var(--color-error);'>Error: </strong> You have a higher level (" + level + ") than your target level (" + targetLevel + ")";
 			result.scrollIntoView();
 			return;
@@ -344,14 +407,17 @@ function calculate() {
 	result.scrollIntoView();
 }
 
-function switchMode(el) {
+function switchMode(el)
+{
 	const bodyClass = document.body.classList;
-	if (bodyClass.contains('dark')) {
+	if (bodyClass.contains('dark'))
+	{
 		el.innerHTML = '☀️';
 		bodyClass.remove('dark');
 		setCookie("dark", "false", 365);
 	}
-	else {
+	else
+	{
 		el.innerHTML = '🌙';
 		bodyClass.add('dark');
 		setCookie("dark", "true", 365);
