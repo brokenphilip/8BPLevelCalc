@@ -31,7 +31,7 @@ const mainTables =
 	["Berlin (25M/50M)", 13000, 3900],
 	["Venice (75M/150M)", 26000, 7800],
 	["Osaka (100M/200M)", 17000, 5200],
-	["Maui* (1B/2B)", 78000, 23400],
+	["Maui* (1B/2B)", 78000, 26000],
 ];
 
 const doubleBetTables =
